@@ -169,4 +169,54 @@ if ! hasmapto('<Plug>(PatternCompleteSearch)', 'i')
     imap <C-r>& <Plug>(PatternCompleteSearch)
 endif
 
+"-------------------------------------------------------------------------------
+
+function! PatternComplete#SubstForSearchMatch( text )
+    " For the command-line, newlines must be represented by a ^@; otherwise, the
+    " newline would be interpreted as <CR> and prematurely execute the
+    " command-line. 
+    return substitute(a:text, '\n', "\<C-v>\<C-@>", 'g')
+endfunction
+function! PatternComplete#GetNextSearchMatch()
+    " As an optimization, try a buffer-search from the cursor position first,
+    " before triggering the full completion search over all windows. 
+    let l:startPos = searchpos(@/, 'cnw')
+    if l:startPos != [0, 0]
+	let l:endPos = searchpos(@/, 'enw')
+	if l:endPos != [0, 0]
+	    let l:searchMatch = CompleteHelper#ExtractText(l:startPos, l:endPos, {})
+	    if ! empty(l:searchMatch)
+		return l:searchMatch
+	    endif
+	endif
+    endif
+
+    " Do a full completion search. 
+    try
+	let l:completeMatches = []
+	call CompleteHelper#FindMatches(l:completeMatches, @/, {'complete': s:GetCompleteOption(), 'multiline': function('PatternComplete#SubstForSearchMatch')})
+	if ! empty(l:completeMatches)
+	    return l:completeMatches[0].word
+	endif
+    catch /^Vim\%((\a\+)\)\=:E/
+	" v:exception contains what is normally in v:errmsg, but with extra
+	" exception source info prepended, which we cut away. 
+	let v:errmsg = substitute(v:exception, '^Vim\%((\a\+)\)\=:', '', '')
+	echohl ErrorMsg
+	echomsg v:errmsg
+	echohl None
+    endtry
+
+    " Fall back to returning the search pattern itself. It's up to the user to
+    " turn it into literal text by editing out the regular expression atoms. 
+    return @/
+endfunction
+function! PatternComplete#SearchMatch()
+    return PatternComplete#SubstForSearchMatch(PatternComplete#GetNextSearchMatch())
+endfunction
+cnoremap <expr> <Plug>(PatternCompleteSearchMatch) PatternComplete#SearchMatch()
+if ! hasmapto('<Plug>(PatternCompleteSearchMatch)', 'c')
+    cmap <C-r>& <Plug>(PatternCompleteSearchMatch)
+endif
+
 " vim: set sts=4 sw=4 noexpandtab ff=unix fdm=syntax :

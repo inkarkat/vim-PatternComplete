@@ -35,6 +35,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"	002	04-Oct-2011	Move s:Process() to CompleteHelper#Abbreviate(). 
 "	001	03-Oct-2011	file creation from MotionComplete.vim. 
 
 " Avoid installing twice or when in unsupported Vim version. 
@@ -51,23 +52,6 @@ function! s:GetCompleteOption()
     return (exists('b:PatternComplete_complete') ? b:PatternComplete_complete : g:PatternComplete_complete)
 endfunction
 
-function! s:TabReplacement()
-    if ! exists('s:tabReplacement')
-	let s:tabReplacement = matchstr(&listchars, 'tab:\zs..')
-	let s:tabReplacement = (empty(s:tabReplacement) ? '^I' : s:tabReplacement)
-    endif
-    return s:tabReplacement
-endfunction
-function! s:Process( match )
-    " Shorten the match abbreviation; also change (invisible) <Tab> characters. 
-    let l:abbreviatedMatch = substitute(a:match.word, '\t', s:TabReplacement(), 'g')
-    let l:maxDisplayLen = &columns / 2
-    if len(l:abbreviatedMatch) > l:maxDisplayLen
-	let a:match.abbr = EchoWithoutScrolling#TruncateTo(l:abbreviatedMatch, l:maxDisplayLen)
-    endif
-
-    return a:match
-endfunction
 function! PatternComplete#PatternComplete( findstart, base )
     if a:findstart
 	" This completion does not consider the text before the cursor. 
@@ -103,7 +87,7 @@ function! PatternComplete#WordPatternComplete( findstart, base )
 		call CompleteHelper#FindMatches( l:matches, '\%(^\|\s\)\zs\%(' . s:pattern . '\m\)\ze\%($\|\s\)', {'complete': s:GetCompleteOption()} )
 	    endif
 
-	    call map(l:matches, 's:Process(v:val)')
+	    call map(l:matches, 'CompleteHelper#Abbreviate(v:val)')
 	    return l:matches
 	catch /^Vim\%((\a\+)\)\=:E/
 	    " v:exception contains what is normally in v:errmsg, but with extra

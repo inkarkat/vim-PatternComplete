@@ -13,8 +13,8 @@
 "			<Enter> to conclude), then finds matches for
 "			\<{pattern}\>, or {pattern} surrounded by whitespace as
 "			a fallback. 
-"								    *i_CTRL-R_&*
-" <i_CTRL-R_&>		Find matches for the last search pattern, |"/|. 
+"								    *i_CTRL-X_&*
+" <i_CTRL-X_&>		Find matches for the last search pattern, |"/|. 
 "								    *c_CTRL-R_&*
 " <c_CTRL-R_&>		Insert first match for the last search pattern, |"/|. 
 "
@@ -166,18 +166,19 @@ if ! hasmapto('<Plug>(PatternCompleteWordInput)', 'i')
     imap <C-x>* <Plug>(PatternCompleteWordInput)
 endif
 if ! hasmapto('<Plug>(PatternCompleteSearch)', 'i')
-    imap <C-r>& <Plug>(PatternCompleteSearch)
+    imap <C-x>& <Plug>(PatternCompleteSearch)
 endif
 
 "-------------------------------------------------------------------------------
 
 function! PatternComplete#SubstForSearchMatch( text )
-    " For the command-line, newlines must be represented by a ^@; otherwise, the
-    " newline would be interpreted as <CR> and prematurely execute the
-    " command-line. 
-    return substitute(a:text, '\n', "\<C-v>\<C-@>", 'g')
+    " As the command-line is directly set via c_CTRL-\_e, no translation of
+    " newlines is necessary. However, we need to pass a function to
+    " CompleteHelper#FindMatches() to avoid the default behavior of removing
+    " newlines. 
+    return a:text
 endfunction
-function! PatternComplete#GetNextSearchMatch()
+function! PatternComplete#GetNextSearchMatch( completeOption )
     " As an optimization, try a buffer-search from the cursor position first,
     " before triggering the full completion search over all windows. 
     let l:startPos = searchpos(@/, 'cnw')
@@ -191,13 +192,33 @@ function! PatternComplete#GetNextSearchMatch()
 	endif
     endif
 
+    if empty(a:completeOption) || a:completeOption ==# '.'
+	" No completion from other buffers desired. 
+	return @/
+    endif
+
     " Do a full completion search. 
+    " XXX: As the CompleteHelper#FindMatches() implementation visits every
+    " window (and this is not allowed in a :cmap), we need to jump out of
+    " command-line mode for that, and then do the insertion into the
+    " command-line ourselves. 
+    let [s:cmdline, s:cmdpos] = [getcmdline(), getcmdpos()]
+    return "\<C-c>:call PatternComplete#SetSearchMatch(" . string(a:completeOption) . ")\<CR>"
+endfunction
+function! PatternComplete#SetSearchMatch( completeOption )
     try
 	let l:completeMatches = []
-	call CompleteHelper#FindMatches(l:completeMatches, @/, {'complete': s:GetCompleteOption(), 'multiline': function('PatternComplete#SubstForSearchMatch')})
+	call CompleteHelper#FindMatches(l:completeMatches, @/, {'complete': a:completeOption, 'multiline': function('PatternComplete#SubstForSearchMatch')})
 	if ! empty(l:completeMatches)
-	    return l:completeMatches[0].word
+	    let s:match = l:completeMatches[0].word
+	else
+	    " Fall back to returning the search pattern itself. It's up to the
+	    " user to turn it into literal text by editing out the regular
+	    " expression atoms. 
+	    let s:match = @/
 	endif
+
+	call feedkeys(":\<C-\>e(PatternComplete#SetSearchMatchCmdline())\<CR>")
     catch /^Vim\%((\a\+)\)\=:E/
 	" v:exception contains what is normally in v:errmsg, but with extra
 	" exception source info prepended, which we cut away. 
@@ -206,13 +227,16 @@ function! PatternComplete#GetNextSearchMatch()
 	echomsg v:errmsg
 	echohl None
     endtry
-
-    " Fall back to returning the search pattern itself. It's up to the user to
-    " turn it into literal text by editing out the regular expression atoms. 
-    return @/
+endfunction
+function! PatternComplete#SetSearchMatchCmdline()
+    call setcmdpos(s:cmdpos + len(s:match))
+    return strpart(s:cmdline, 0, s:cmdpos - 1) . s:match . strpart(s:cmdline, s:cmdpos - 1)
 endfunction
 function! PatternComplete#SearchMatch()
-    return PatternComplete#SubstForSearchMatch(PatternComplete#GetNextSearchMatch())
+    " For the command-line, newlines must be represented by a ^@; otherwise, the
+    " newline would be interpreted as <CR> and prematurely execute the
+    " command-line. 
+    return substitute(PatternComplete#GetNextSearchMatch(s:GetCompleteOption()), '\n', "\<C-v>\<C-@>", 'g')
 endfunction
 cnoremap <expr> <Plug>(PatternCompleteSearchMatch) PatternComplete#SearchMatch()
 if ! hasmapto('<Plug>(PatternCompleteSearchMatch)', 'c')

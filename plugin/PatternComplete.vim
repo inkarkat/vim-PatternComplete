@@ -2,7 +2,9 @@
 " {pattern} or last search pattern. 
 "
 " DESCRIPTION:
-"   Most insert mode completions complete only the current word (or an entire
+"   This plugin offers completions that either use the last search pattern or
+"   query for a regular expression, and then offer all matches for completion.
+"   No completion base is used. 
 "
 " USAGE:
 "								    *i_CTRL-X_/*
@@ -35,6 +37,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"	003	04-Oct-2011	CompleteHelper multiline handling is now
+"				disabled; remove dummy function. 
 "	002	04-Oct-2011	Move s:Process() to CompleteHelper#Abbreviate(). 
 "	001	03-Oct-2011	file creation from MotionComplete.vim. 
 
@@ -155,13 +159,6 @@ endif
 
 "-------------------------------------------------------------------------------
 
-function! PatternComplete#SubstForSearchMatch( text )
-    " As the command-line is directly set via c_CTRL-\_e, no translation of
-    " newlines is necessary. However, we need to pass a function to
-    " CompleteHelper#FindMatches() to avoid the default behavior of removing
-    " newlines. 
-    return a:text
-endfunction
 function! PatternComplete#GetNextSearchMatch( completeOption )
     " As an optimization, try a buffer-search from the cursor position first,
     " before triggering the full completion search over all windows. 
@@ -192,7 +189,9 @@ endfunction
 function! PatternComplete#SetSearchMatch( completeOption )
     try
 	let l:completeMatches = []
-	call CompleteHelper#FindMatches(l:completeMatches, @/, {'complete': a:completeOption, 'multiline': function('PatternComplete#SubstForSearchMatch')})
+	" As the command-line is directly set via c_CTRL-\_e, no translation of
+	" newlines is necessary. 
+	call CompleteHelper#FindMatches(l:completeMatches, @/, {'complete': a:completeOption})
 	if ! empty(l:completeMatches)
 	    let s:match = l:completeMatches[0].word
 	else

@@ -37,6 +37,9 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"	004	12-Dec-2011	Factor out s:ErrorMsg(). 
+"				Error message delay is only necessary when
+"				'cmdheight' is 1. 
 "	003	04-Oct-2011	CompleteHelper multiline handling is now
 "				disabled; remove dummy function. 
 "	002	04-Oct-2011	Move s:Process() to CompleteHelper#Abbreviate(). 
@@ -56,6 +59,18 @@ function! s:GetCompleteOption()
     return (exists('b:PatternComplete_complete') ? b:PatternComplete_complete : g:PatternComplete_complete)
 endfunction
 
+function! s:ErrorMsg( exception )
+    " v:exception contains what is normally in v:errmsg, but with extra
+    " exception source info prepended, which we cut away. 
+    let v:errmsg = substitute(a:exception, '^Vim\%((\a\+)\)\=:', '', '')
+    echohl ErrorMsg
+    echomsg v:errmsg
+    echohl None
+
+    if &cmdheight == 1
+	sleep 500m
+    endif
+endfunction
 function! PatternComplete#PatternComplete( findstart, base )
     if a:findstart
 	" This completion does not consider the text before the cursor. 
@@ -67,14 +82,7 @@ function! PatternComplete#PatternComplete( findstart, base )
 	    call map(l:matches, 's:Process(v:val)')
 	    return l:matches
 	catch /^Vim\%((\a\+)\)\=:E/
-	    " v:exception contains what is normally in v:errmsg, but with extra
-	    " exception source info prepended, which we cut away. 
-	    let v:errmsg = substitute(v:exception, '^Vim\%((\a\+)\)\=:', '', '')
-	    echohl ErrorMsg
-	    echomsg v:errmsg
-	    echohl None
-
-	    sleep 500m
+	    call s:ErrorMsg(v:exception)
 	    return []
 	endtry
     endif
@@ -94,14 +102,7 @@ function! PatternComplete#WordPatternComplete( findstart, base )
 	    call map(l:matches, 'CompleteHelper#Abbreviate(v:val)')
 	    return l:matches
 	catch /^Vim\%((\a\+)\)\=:E/
-	    " v:exception contains what is normally in v:errmsg, but with extra
-	    " exception source info prepended, which we cut away. 
-	    let v:errmsg = substitute(v:exception, '^Vim\%((\a\+)\)\=:', '', '')
-	    echohl ErrorMsg
-	    echomsg v:errmsg
-	    echohl None
-
-	    sleep 500m
+	    call s:ErrorMsg(v:exception)
 	    return []
 	endtry
     endif

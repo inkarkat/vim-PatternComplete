@@ -37,6 +37,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"	005	14-Dec-2011	BUG: Forgot to rename s:Process(). 
 "	004	12-Dec-2011	Factor out s:ErrorMsg(). 
 "				Error message delay is only necessary when
 "				'cmdheight' is 1. 
@@ -79,7 +80,7 @@ function! PatternComplete#PatternComplete( findstart, base )
 	try
 	    let l:matches = []
 	    call CompleteHelper#FindMatches( l:matches, s:pattern, {'complete': s:GetCompleteOption()} )
-	    call map(l:matches, 's:Process(v:val)')
+	    call map(l:matches, 'CompleteHelper#Abbreviate(v:val)')
 	    return l:matches
 	catch /^Vim\%((\a\+)\)\=:E/
 	    call s:ErrorMsg(v:exception)

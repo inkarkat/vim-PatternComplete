@@ -1,0 +1,89 @@
+*PatternComplete.txt*	Insert mode completion that completes matches of queried {pattern} or last search pattern.
+
+		      PATTERN COMPLETE    by Ingo Karkat
+							 *PatternComplete.vim*
+description			|PatternComplete-description|
+usage				|PatternComplete-usage|
+installation			|PatternComplete-installation|
+configuration			|PatternComplete-configuration|
+limitations			|PatternComplete-limitations|
+known problems			|PatternComplete-known-problems|
+todo				|PatternComplete-todo|
+history				|PatternComplete-history|
+
+==============================================================================
+DESCRIPTION					 *PatternComplete-description*
+
+This plugin offers completions that either use the last search pattern or
+query for a regular expression, and then offer all matches for completion.
+No completion base is used.
+
+SEE ALSO								     *
+
+- Check out the CompleteHelper.vim plugin page (vimscript #3914) for a full
+  list of insert mode completions powered by it.
+
+==============================================================================
+USAGE						       *PatternComplete-usage*
+
+								  *i_CTRL-X_/*
+CTRL-X /		The completion first queries for {pattern} (press
+			<Enter> to conclude), then finds matches for
+			{pattern}.
+							       *i_CTRL-X_star*
+CTRL-X *		The completion first queries for {pattern} (press
+			<Enter> to conclude), then finds matches for
+			\<{pattern}\>, or {pattern} surrounded by whitespace
+			as a fallback.
+								  *i_CTRL-X_&*
+CTRL-X &		Find matches for the last search pattern, |quote/|.
+								  *c_CTRL-R_&*
+CTRL-R &		Insert first match for the last search pattern,
+			|quote/|.
+
+EXAMPLE						     *PatternComplete-example*
+
+==============================================================================
+INSTALLATION					*PatternComplete-installation*
+
+This script is packaged as a |vimball|. If you have the "gunzip" decompressor
+in your PATH, simply edit the *.vba.gz package in Vim; otherwise, decompress
+the archive first, e.g. using WinZip. Inside Vim, install by sourcing the
+vimball or via the |:UseVimball| command. >
+    vim PatternComplete.vba.gz
+    :so %
+To uninstall, use the |:RmVimball| command.
+
+DEPENDENCIES					*PatternComplete-dependencies*
+
+- Requires Vim 7.0 or higher.
+- Requires the CompleteHelper.vim plugin (vimscript #3914).
+
+==============================================================================
+CONFIGURATION				       *PatternComplete-configuration*
+
+==============================================================================
+LIMITATIONS					 *PatternComplete-limitations*
+
+KNOWN PROBLEMS				      *PatternComplete-known-problems*
+
+TODO							*PatternComplete-todo*
+
+IDEAS						       *PatternComplete-ideas*
+
+==============================================================================
+HISTORY						     *PatternComplete-history*
+
+GOAL
+First published version.
+
+0.01	03-Oct-2011
+Started development.
+
+==============================================================================
+Copyright: (C) 2011-2012 Ingo Karkat
+The VIM LICENSE applies to this script; see |copyright|.
+
+Maintainer:	Ingo Karkat <ingo@karkat.de>
+==============================================================================
+ vim:tw=78:ts=8:ft=help:norl:

@@ -62,6 +62,24 @@ DEPENDENCIES					*PatternComplete-dependencies*
 ==============================================================================
 CONFIGURATION				       *PatternComplete-configuration*
 
+For a permanent configuration, put the following commands into your |vimrc|:
+
+		     *b:PatternComplete_complete* *g:PatternComplete_complete*
+Analoguous to the 'complete' option, you can specify which buffers will be
+scanned for completion candidates. Currently, '.' (current buffer), 'w'
+(buffers from other windows), and 'b' (other listed buffers) are supported. >
+    let g:PatternComplete_complete = '.,w,b'
+The global setting can be overridden for a particular buffer
+(b:PatternComplete_complete).
+						       *PatternComplete-remap*
+If you want to use different mappings, map your keys to the
+<Plug>(PatternComplete) mapping targets _before_ sourcing the script (e.g.
+in your |vimrc|): >
+    imap <C-x>/ <Plug>(PatternCompleteInput)
+    imap <C-x>* <Plug>(PatternCompleteWordInput)
+    imap <C-x>& <Plug>(PatternCompleteSearch)
+    cmap <C-r>& <Plug>(PatternCompleteSearchMatch)
+<
 ==============================================================================
 LIMITATIONS					 *PatternComplete-limitations*
 

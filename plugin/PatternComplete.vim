@@ -11,6 +11,9 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"	007	03-Sep-2012	Add value "b" (other listed buffers) to the
+"				plugin's 'complete' option offered by
+"				CompleteHelper.vim 1.20.
 "	006	20-Aug-2012	Split off functions into separate autoload
 "				script and documentation into dedicated help
 "				file.
@@ -32,7 +35,7 @@ let g:loaded_PatternComplete = 1
 "- configuration ---------------------------------------------------------------
 
 if ! exists('g:PatternComplete_complete')
-    let g:PatternComplete_complete = '.,w'
+    let g:PatternComplete_complete = '.,w,b'
 endif
 
 

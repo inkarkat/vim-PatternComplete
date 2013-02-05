@@ -1,0 +1,3 @@
+autoload/PatternComplete.vim
+plugin/PatternComplete.vim
+doc/PatternComplete.txt

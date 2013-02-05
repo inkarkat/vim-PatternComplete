@@ -1,5 +1,4 @@
-" PatternComplete.vim: Insert mode completion that completes matches of queried
-" {pattern} or last search pattern.
+" PatternComplete.vim: Insert mode completion for matches of queried / last search pattern.
 "
 " DEPENDENCIES:
 "   - Requires Vim 7.0 or higher.
@@ -11,7 +10,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
-"	007	03-Sep-2012	Add value "b" (other listed buffers) to the
+"   1.00.007	03-Sep-2012	Add value "b" (other listed buffers) to the
 "				plugin's 'complete' option offered by
 "				CompleteHelper.vim 1.20.
 "	006	20-Aug-2012	Split off functions into separate autoload

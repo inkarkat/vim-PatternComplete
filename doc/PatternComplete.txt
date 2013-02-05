@@ -1,4 +1,4 @@
-*PatternComplete.txt*	Insert mode completion that completes matches of queried {pattern} or last search pattern.
+*PatternComplete.txt*	Insert mode completion for matches of queried / last search pattern.
 
 		      PATTERN COMPLETE    by Ingo Karkat
 							 *PatternComplete.vim*
@@ -18,6 +18,11 @@ This plugin offers completions that either use the last search pattern or
 query for a regular expression, and then offer all matches for completion.
 No completion base is used.
 
+Without this plugin, you can just directly insert the contents of the last
+search pattern register via CTRL-R /, but the register can contain \<word\>
+boundary characters from a |star| search or other non-literal regexp atoms
+like \V, .*, etc., which you usually don't want inserted into the text.
+
 SEE ALSO								     *
 
 - Check out the |CompleteHelper.vim| plugin page (vimscript #3914) for a full
@@ -25,7 +30,6 @@ SEE ALSO								     *
 
 ==============================================================================
 USAGE						       *PatternComplete-usage*
-
 								  *i_CTRL-X_/*
 CTRL-X /		The completion first queries for {pattern} (press
 			<Enter> to conclude), then finds matches for
@@ -38,19 +42,17 @@ CTRL-X *		The completion first queries for {pattern} (press
 								  *i_CTRL-X_&*
 CTRL-X &		Find matches for the last search pattern, |quote/|.
 								  *c_CTRL-R_&*
-CTRL-R &		Insert first match for the last search pattern,
-			|quote/|.
-
-EXAMPLE						     *PatternComplete-example*
+CTRL-R &		Insert first match for the last search pattern
+			|quote/| into the command-line.
 
 ==============================================================================
 INSTALLATION					*PatternComplete-installation*
 
 This script is packaged as a |vimball|. If you have the "gunzip" decompressor
-in your PATH, simply edit the *.vba.gz package in Vim; otherwise, decompress
+in your PATH, simply edit the *.vmb.gz package in Vim; otherwise, decompress
 the archive first, e.g. using WinZip. Inside Vim, install by sourcing the
 vimball or via the |:UseVimball| command. >
-    vim PatternComplete.vba.gz
+    vim PatternComplete*.vmb.gz
     :so %
 To uninstall, use the |:RmVimball| command.
 
@@ -92,7 +94,7 @@ IDEAS						       *PatternComplete-ideas*
 ==============================================================================
 HISTORY						     *PatternComplete-history*
 
-GOAL
+1.00	01-Oct-2012
 First published version.
 
 0.01	03-Oct-2011

@@ -1,5 +1,4 @@
-" PatternComplete.vim: Insert mode completion that completes matches of queried
-" {pattern} or last search pattern.
+" PatternComplete.vim: Insert mode completion for matches of queried / last search pattern.
 "
 " DEPENDENCIES:
 "   - Requires Vim 7.0 or higher.
@@ -11,7 +10,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
-"   	007	01-Sep-2012	Make a:matchObj in CompleteHelper#ExtractText()
+"   1.00.007	01-Sep-2012	Make a:matchObj in CompleteHelper#ExtractText()
 "				optional; it's not used there, anyway.
 "	006	20-Aug-2012	Split off functions into separate autoload
 "				script and documentation into dedicated help

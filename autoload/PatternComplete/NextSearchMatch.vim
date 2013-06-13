@@ -9,8 +9,20 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"	002	06-Feb-2013	DWIM: Remove the \<...\> enclosure when the last
+"				used search pattern is a whole word search (that
+"				just has no matches now).
 "	001	06-Feb-2013	file creation from PatternComplete.vim.
 
+function! s:DefaultSearchResult()
+    if @/ =~# '^\\<\k\+\\>$'
+	" DWIM: Remove the \<...\> enclosure when the last used search pattern
+	" is a whole word search (that just has no matches now).
+	return substitute(@/, '^\\<\|\\>$', '', 'g')
+    endif
+
+    return @/
+endfunction
 function! PatternComplete#NextSearchMatch#Get( completeOption )
     " As an optimization, try a buffer-search from the cursor position first,
     " before triggering the full completion search over all windows.
@@ -27,7 +39,7 @@ function! PatternComplete#NextSearchMatch#Get( completeOption )
 
     if empty(a:completeOption) || a:completeOption ==# '.'
 	" No completion from other buffers desired.
-	return @/
+	return s:DefaultSearchResult()
     endif
 
     " Do a full completion search.
@@ -50,7 +62,7 @@ function! PatternComplete#NextSearchMatch#Set( completeOption )
 	    " Fall back to returning the search pattern itself. It's up to the
 	    " user to turn it into literal text by editing out the regular
 	    " expression atoms.
-	    let s:match = @/
+	    let s:match = s:DefaultSearchResult()
 	endif
 
 	call feedkeys(":\<C-\>e(PatternComplete#NextSearchMatch#SetCmdline())\<CR>")

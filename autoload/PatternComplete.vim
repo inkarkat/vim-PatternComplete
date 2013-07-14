@@ -2,6 +2,7 @@
 "
 " DEPENDENCIES:
 "   - CompleteHelper.vim autoload script
+"   - ingo/msg.vim autoload script
 "
 " Copyright: (C) 2011-2013 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
@@ -9,6 +10,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.02.009	14-Jun-2013	Use ingo/msg.vim.
 "   1.01.008	06-Feb-2013	Move command-line insertion functions to
 "				separate PatternComplete/NextSearchMatch.vim
 "				script. Only need to additionally expose
@@ -32,12 +34,7 @@ function! PatternComplete#GetCompleteOption()
 endfunction
 
 function! s:ErrorMsg( exception )
-    " v:exception contains what is normally in v:errmsg, but with extra
-    " exception source info prepended, which we cut away.
-    let v:errmsg = substitute(a:exception, '^Vim\%((\a\+)\)\=:', '', '')
-    echohl ErrorMsg
-    echomsg v:errmsg
-    echohl None
+    call ingo#msg#VimExceptionMsg()
 
     if &cmdheight == 1
 	sleep 500m
@@ -104,11 +101,7 @@ function! PatternComplete#InputExpr( isWordInput )
 endfunction
 function! PatternComplete#SearchExpr()
     if empty(@/)
-	let v:errmsg = 'E35: No previous regular expression'
-	echohl ErrorMsg
-	echomsg v:errmsg
-	echohl None
-
+	call ingo#msg#ErrorMsg('E35: No previous regular expression')
 	return "$\<BS>"
     endif
 

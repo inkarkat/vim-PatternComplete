@@ -2,6 +2,7 @@
 "
 " DEPENDENCIES:
 "   - PatternComplete.vim autoload script
+"   - ingo/msg.vim autoload script
 "
 " Copyright: (C) 2011-2013 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
@@ -9,7 +10,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
-"	002	06-Feb-2013	DWIM: Remove the \<...\> enclosure when the last
+"   1.02.003	14-Jun-2013	Use ingo/msg.vim.
+"   1.00.002	06-Feb-2013	DWIM: Remove the \<...\> enclosure when the last
 "				used search pattern is a whole word search (that
 "				just has no matches now).
 "	001	06-Feb-2013	file creation from PatternComplete.vim.
@@ -67,12 +69,7 @@ function! PatternComplete#NextSearchMatch#Set( completeOption )
 
 	call feedkeys(":\<C-\>e(PatternComplete#NextSearchMatch#SetCmdline())\<CR>")
     catch /^Vim\%((\a\+)\)\=:E/
-	" v:exception contains what is normally in v:errmsg, but with extra
-	" exception source info prepended, which we cut away.
-	let v:errmsg = substitute(v:exception, '^Vim\%((\a\+)\)\=:', '', '')
-	echohl ErrorMsg
-	echomsg v:errmsg
-	echohl None
+	call ingo#msg#VimExceptionMsg()
     endtry
 endfunction
 function! PatternComplete#NextSearchMatch#SetCmdline()

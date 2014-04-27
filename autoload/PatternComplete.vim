@@ -10,7 +10,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
-"   1.02.009	14-Jun-2013	Use ingo/msg.vim.
+"   1.01.009	14-Jun-2013	Use ingo/msg.vim.
 "   1.01.008	06-Feb-2013	Move command-line insertion functions to
 "				separate PatternComplete/NextSearchMatch.vim
 "				script. Only need to additionally expose
@@ -47,7 +47,7 @@ function! PatternComplete#PatternComplete( findstart, base )
     else
 	try
 	    let l:matches = []
-	    call CompleteHelper#FindMatches( l:matches, s:pattern, {'complete': PatternComplete#GetCompleteOption()} )
+	    call CompleteHelper#FindMatches(l:matches, s:pattern, {'complete': PatternComplete#GetCompleteOption()})
 	    call map(l:matches, 'CompleteHelper#Abbreviate(v:val)')
 	    return l:matches
 	catch /^Vim\%((\a\+)\)\=:E/
@@ -63,9 +63,9 @@ function! PatternComplete#WordPatternComplete( findstart, base )
     else
 	try
 	    let l:matches = []
-	    call CompleteHelper#FindMatches( l:matches, '\<\%(' . s:pattern . '\m\)\>', {'complete': PatternComplete#GetCompleteOption()} )
+	    call CompleteHelper#FindMatches(l:matches, '\<\%(' . s:pattern . '\m\)\>', {'complete': PatternComplete#GetCompleteOption()})
 	    if empty(l:matches)
-		call CompleteHelper#FindMatches( l:matches, '\%(^\|\s\)\zs\%(' . s:pattern . '\m\)\ze\%($\|\s\)', {'complete': PatternComplete#GetCompleteOption()} )
+		call CompleteHelper#FindMatches(l:matches, '\%(^\|\s\)\zs\%(' . s:pattern . '\m\)\ze\%($\|\s\)', {'complete': PatternComplete#GetCompleteOption()})
 	    endif
 
 	    call map(l:matches, 'CompleteHelper#Abbreviate(v:val)')

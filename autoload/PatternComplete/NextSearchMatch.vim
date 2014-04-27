@@ -3,6 +3,7 @@
 " DEPENDENCIES:
 "   - PatternComplete.vim autoload script
 "   - ingo/msg.vim autoload script
+"   - ingo/text.vim autoload script
 "
 " Copyright: (C) 2011-2013 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
@@ -10,6 +11,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.02.004	18-Dec-2013	Use ingo#text#Get() instead of
+"				CompleteHelper#ExtractText().
 "   1.02.003	14-Jun-2013	Use ingo/msg.vim.
 "   1.00.002	06-Feb-2013	DWIM: Remove the \<...\> enclosure when the last
 "				used search pattern is a whole word search (that
@@ -32,7 +35,7 @@ function! PatternComplete#NextSearchMatch#Get( completeOption )
     if l:startPos != [0, 0]
 	let l:endPos = searchpos(@/, 'enw')
 	if l:endPos != [0, 0]
-	    let l:searchMatch = CompleteHelper#ExtractText(l:startPos, l:endPos)
+	    let l:searchMatch = ingo#text#Get(l:startPos, l:endPos)
 	    if ! empty(l:searchMatch)
 		return l:searchMatch
 	    endif

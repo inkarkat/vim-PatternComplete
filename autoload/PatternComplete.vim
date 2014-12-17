@@ -4,7 +4,7 @@
 "   - CompleteHelper.vim autoload script
 "   - ingo/msg.vim autoload script
 "
-" Copyright: (C) 2011-2013 Ingo Karkat
+" Copyright: (C) 2011-2014 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -50,7 +50,7 @@ function! PatternComplete#PatternComplete( findstart, base )
 	    call CompleteHelper#FindMatches(l:matches, s:pattern, {'complete': PatternComplete#GetCompleteOption()})
 	    call map(l:matches, 'CompleteHelper#Abbreviate(v:val)')
 	    return l:matches
-	catch /^Vim\%((\a\+)\)\=:E/
+	catch /^Vim\%((\a\+)\)\=:/
 	    call s:ErrorMsg(v:exception)
 	    return []
 	endtry
@@ -70,7 +70,7 @@ function! PatternComplete#WordPatternComplete( findstart, base )
 
 	    call map(l:matches, 'CompleteHelper#Abbreviate(v:val)')
 	    return l:matches
-	catch /^Vim\%((\a\+)\)\=:E/
+	catch /^Vim\%((\a\+)\)\=:/
 	    call s:ErrorMsg(v:exception)
 	    return []
 	endtry

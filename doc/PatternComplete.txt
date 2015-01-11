@@ -61,7 +61,8 @@ DEPENDENCIES					*PatternComplete-dependencies*
 - Requires Vim 7.0 or higher.
 - Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.011 or
   higher.
-- Requires the |CompleteHelper.vim| plugin (vimscript #3914).
+- Requires the |CompleteHelper.vim| plugin (vimscript #3914), version 1.50 or
+  higher.
 
 ==============================================================================
 CONFIGURATION				       *PatternComplete-configuration*
@@ -97,6 +98,8 @@ IDEAS						       *PatternComplete-ideas*
 HISTORY						     *PatternComplete-history*
 
 1.02	RELEASEME
+- Use a:options.abbreviate instead of explicit abbreviation loop. *** You need
+  to update to CompleteHelper.vim (vimscript #3914) version 1.50! ***
 - Use more functions from the ingo-library. *** You need to update to
   ingo-library (vimscript #4433) version 1.011! ***
 
@@ -112,7 +115,7 @@ First published version.
 Started development.
 
 ==============================================================================
-Copyright: (C) 2011-2013 Ingo Karkat
+Copyright: (C) 2011-2014 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>

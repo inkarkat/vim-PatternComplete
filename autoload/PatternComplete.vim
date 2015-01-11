@@ -10,6 +10,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.02.010	18-Dec-2014	Use a:options.abbreviate instead of explicit
+"				abbreviation loop.
 "   1.01.009	14-Jun-2013	Use ingo/msg.vim.
 "   1.01.008	06-Feb-2013	Move command-line insertion functions to
 "				separate PatternComplete/NextSearchMatch.vim
@@ -47,8 +49,7 @@ function! PatternComplete#PatternComplete( findstart, base )
     else
 	try
 	    let l:matches = []
-	    call CompleteHelper#FindMatches(l:matches, s:pattern, {'complete': PatternComplete#GetCompleteOption()})
-	    call map(l:matches, 'CompleteHelper#Abbreviate(v:val)')
+	    call CompleteHelper#FindMatches(l:matches, s:pattern, {'complete': PatternComplete#GetCompleteOption(), 'abbreviate': 1})
 	    return l:matches
 	catch /^Vim\%((\a\+)\)\=:/
 	    call s:ErrorMsg(v:exception)
@@ -63,12 +64,10 @@ function! PatternComplete#WordPatternComplete( findstart, base )
     else
 	try
 	    let l:matches = []
-	    call CompleteHelper#FindMatches(l:matches, '\<\%(' . s:pattern . '\m\)\>', {'complete': PatternComplete#GetCompleteOption()})
+	    call CompleteHelper#FindMatches(l:matches, '\<\%(' . s:pattern . '\m\)\>', {'complete': PatternComplete#GetCompleteOption(), 'abbreviate': 1})
 	    if empty(l:matches)
 		call CompleteHelper#FindMatches(l:matches, '\%(^\|\s\)\zs\%(' . s:pattern . '\m\)\ze\%($\|\s\)', {'complete': PatternComplete#GetCompleteOption()})
 	    endif
-
-	    call map(l:matches, 'CompleteHelper#Abbreviate(v:val)')
 	    return l:matches
 	catch /^Vim\%((\a\+)\)\=:/
 	    call s:ErrorMsg(v:exception)

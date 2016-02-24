@@ -5,7 +5,7 @@
 "   - ingo/msg.vim autoload script
 "   - ingo/text.vim autoload script
 "
-" Copyright: (C) 2011-2013 Ingo Karkat
+" Copyright: (C) 2011-2014 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -71,7 +71,7 @@ function! PatternComplete#NextSearchMatch#Set( completeOption )
 	endif
 
 	call feedkeys(":\<C-\>e(PatternComplete#NextSearchMatch#SetCmdline())\<CR>")
-    catch /^Vim\%((\a\+)\)\=:E/
+    catch /^Vim\%((\a\+)\)\=:/
 	call ingo#msg#VimExceptionMsg()
     endtry
 endfunction

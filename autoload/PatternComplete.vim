@@ -3,13 +3,17 @@
 " DEPENDENCIES:
 "   - CompleteHelper.vim autoload script
 "   - ingo/msg.vim autoload script
+"   - ingo/plugin/setting.vim autoload script
 "
-" Copyright: (C) 2011-2014 Ingo Karkat
+" Copyright: (C) 2011-2015 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.02.011	12-Jan-2015	Remove default g:PatternComplete_complete
+"				configuration and default to 'complete' option
+"				value instead.
 "   1.02.010	18-Dec-2014	Use a:options.abbreviate instead of explicit
 "				abbreviation loop.
 "   1.01.009	14-Jun-2013	Use ingo/msg.vim.
@@ -32,7 +36,7 @@
 "	001	03-Oct-2011	file creation from MotionComplete.vim.
 
 function! PatternComplete#GetCompleteOption()
-    return (exists('b:PatternComplete_complete') ? b:PatternComplete_complete : g:PatternComplete_complete)
+    return ingo#plugin#setting#GetBufferLocal('PatternComplete_complete', &complete)
 endfunction
 
 function! s:ErrorMsg( exception )

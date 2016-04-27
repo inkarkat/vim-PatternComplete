@@ -4,12 +4,15 @@
 "   - Requires Vim 7.0 or higher.
 "   - PatternComplete.vim autoload script
 "
-" Copyright: (C) 2011-2012 Ingo Karkat
+" Copyright: (C) 2011-2015 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.02.009	12-Jan-2015	Remove default g:PatternComplete_complete
+"				configuration and default to 'complete' option
+"				value instead.
 "   1.01.008	06-Feb-2013	Move command-line insertion functions to
 "				separate PatternComplete/NextSearchMatch.vim
 "				script.
@@ -33,13 +36,6 @@ if exists('g:loaded_PatternComplete') || (v:version < 700)
     finish
 endif
 let g:loaded_PatternComplete = 1
-
-"- configuration ---------------------------------------------------------------
-
-if ! exists('g:PatternComplete_complete')
-    let g:PatternComplete_complete = '.,w,b'
-endif
-
 
 "- mappings --------------------------------------------------------------------
 

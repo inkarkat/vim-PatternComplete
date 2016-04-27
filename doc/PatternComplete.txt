@@ -70,12 +70,12 @@ CONFIGURATION				       *PatternComplete-configuration*
 For a permanent configuration, put the following commands into your |vimrc|:
 
 		     *b:PatternComplete_complete* *g:PatternComplete_complete*
-Analoguous to the 'complete' option, you can specify which buffers will be
-scanned for completion candidates. Currently, '.' (current buffer), 'w'
-(buffers from other windows), and 'b' (other listed buffers) are supported. >
-    let g:PatternComplete_complete = '.,w,b'
-The global setting can be overridden for a particular buffer
-(b:PatternComplete_complete).
+By default, the 'complete' option controls which buffers will be scanned for
+completion candidates. You can override that either for the entire plugin, or
+only for particular buffers; see |CompleteHelper_complete| for supported
+values. >
+    let g:PatternComplete_complete = '.,w,b,u'
+<
 						       *PatternComplete-remap*
 If you want to use different mappings, map your keys to the
 <Plug>(PatternComplete) mapping targets _before_ sourcing the script (e.g.
@@ -100,6 +100,8 @@ HISTORY						     *PatternComplete-history*
 1.02	RELEASEME
 - Use a:options.abbreviate instead of explicit abbreviation loop. *** You need
   to update to CompleteHelper.vim (vimscript #3914) version 1.50! ***
+- Remove default g:PatternComplete_complete configuration and default to
+  'complete' option value instead.
 - Use more functions from the ingo-library. *** You need to update to
   ingo-library (vimscript #4433) version 1.011! ***
 
@@ -115,7 +117,7 @@ First published version.
 Started development.
 
 ==============================================================================
-Copyright: (C) 2011-2014 Ingo Karkat
+Copyright: (C) 2011-2015 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>

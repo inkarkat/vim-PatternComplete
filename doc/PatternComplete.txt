@@ -45,6 +45,10 @@ CTRL-X &		Find matches for the last search pattern, |quote/|.
 CTRL-R &		Insert first match for the last search pattern
 			|quote/| into the command-line.
 
+								  *i_CTRL-X_?*
+CTRL-X ?		Find matches, reusing the {pattern} from the last
+			pattern completion.
+
 ==============================================================================
 INSTALLATION					*PatternComplete-installation*
 
@@ -84,6 +88,7 @@ in your |vimrc|): >
     imap <C-x>* <Plug>(PatternCompleteWordInput)
     imap <C-x>& <Plug>(PatternCompleteSearch)
     cmap <C-r>& <Plug>(PatternCompleteSearchMatch)
+    imap <C-x>? <Plug>(PatternCompleteLast)
 <
 ==============================================================================
 LIMITATIONS					 *PatternComplete-limitations*
@@ -97,7 +102,10 @@ IDEAS						       *PatternComplete-ideas*
 ==============================================================================
 HISTORY						     *PatternComplete-history*
 
-1.02	RELEASEME
+1.10	RELEASEME
+- ENH: Add <C-x>? mapping to reuse last search pattern.
+
+1.02	28-Apr-2016
 - Use a:options.abbreviate instead of explicit abbreviation loop. *** You need
   to update to CompleteHelper.vim (vimscript #3914) version 1.50! ***
 - Remove default g:PatternComplete_complete configuration and default to
@@ -117,7 +125,7 @@ First published version.
 Started development.
 
 ==============================================================================
-Copyright: (C) 2011-2015 Ingo Karkat
+Copyright: (C) 2011-2016 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>

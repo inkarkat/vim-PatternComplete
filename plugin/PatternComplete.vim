@@ -4,12 +4,14 @@
 "   - Requires Vim 7.0 or higher.
 "   - PatternComplete.vim autoload script
 "
-" Copyright: (C) 2011-2015 Ingo Karkat
+" Copyright: (C) 2011-2016 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.10.010	28-Apr-2016	ENH: Add <C-x>? mapping to reuse last search
+"				pattern.
 "   1.02.009	12-Jan-2015	Remove default g:PatternComplete_complete
 "				configuration and default to 'complete' option
 "				value instead.
@@ -42,6 +44,7 @@ let g:loaded_PatternComplete = 1
 inoremap <script> <expr> <Plug>(PatternCompleteInput)     PatternComplete#InputExpr(0)
 inoremap <script> <expr> <Plug>(PatternCompleteWordInput) PatternComplete#InputExpr(1)
 inoremap <script> <expr> <Plug>(PatternCompleteSearch)    PatternComplete#SearchExpr()
+inoremap <script> <expr> <Plug>(PatternCompleteLast)      PatternComplete#LastExpr()
 if ! hasmapto('<Plug>(PatternCompleteInput)', 'i')
     imap <C-x>/ <Plug>(PatternCompleteInput)
 endif
@@ -50,6 +53,9 @@ if ! hasmapto('<Plug>(PatternCompleteWordInput)', 'i')
 endif
 if ! hasmapto('<Plug>(PatternCompleteSearch)', 'i')
     imap <C-x>& <Plug>(PatternCompleteSearch)
+endif
+if ! hasmapto('<Plug>(PatternCompleteLast)', 'i')
+    imap <C-x>? <Plug>(PatternCompleteLast)
 endif
 
 

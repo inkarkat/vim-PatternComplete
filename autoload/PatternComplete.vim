@@ -5,12 +5,14 @@
 "   - ingo/msg.vim autoload script
 "   - ingo/plugin/setting.vim autoload script
 "
-" Copyright: (C) 2011-2015 Ingo Karkat
+" Copyright: (C) 2011-2016 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.10.012	28-Apr-2016	ENH: Add <C-x>? mapping to reuse last search
+"				pattern.
 "   1.02.011	12-Jan-2015	Remove default g:PatternComplete_complete
 "				configuration and default to 'complete' option
 "				value instead.
@@ -46,6 +48,7 @@ function! s:ErrorMsg( exception )
 	sleep 500m
     endif
 endfunction
+let s:pattern = ''
 function! PatternComplete#PatternComplete( findstart, base )
     if a:findstart
 	" This completion does not consider the text before the cursor.
@@ -100,6 +103,7 @@ function! PatternComplete#InputExpr( isWordInput )
     else
 	set completefunc=PatternComplete#PatternComplete
     endif
+    let s:completefunc = &completefunc
     return "\<C-x>\<C-u>"
 endfunction
 function! PatternComplete#SearchExpr()
@@ -110,6 +114,16 @@ function! PatternComplete#SearchExpr()
 
     let s:pattern = @/
     set completefunc=PatternComplete#PatternComplete
+    let s:completefunc = &completefunc
+    return "\<C-x>\<C-u>"
+endfunction
+function! PatternComplete#LastExpr()
+    if empty(s:pattern)
+	call ingo#msg#ErrorMsg('E35: No previous regular expression')
+	return "$\<BS>"
+    endif
+
+    let &completefunc = s:completefunc
     return "\<C-x>\<C-u>"
 endfunction
 

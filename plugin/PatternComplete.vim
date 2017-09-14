@@ -4,12 +4,17 @@
 "   - Requires Vim 7.0 or higher.
 "   - PatternComplete.vim autoload script
 "
-" Copyright: (C) 2011-2016 Ingo Karkat
+" Copyright: (C) 2011-2017 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.10.011	15-Sep-2017	ENH: Also support visual mode variants for
+"				<C-x>/ and <C-x>*.
+"				Add g:PatternComplete_DelimitersPattern to
+"				configure possible delimiters for in-buffer
+"				pattern.
 "   1.10.010	28-Apr-2016	ENH: Add <C-x>? mapping to reuse last search
 "				pattern.
 "   1.02.009	12-Jan-2015	Remove default g:PatternComplete_complete
@@ -39,6 +44,14 @@ if exists('g:loaded_PatternComplete') || (v:version < 700)
 endif
 let g:loaded_PatternComplete = 1
 
+"- configuration ---------------------------------------------------------------
+
+if ! exists('g:PatternComplete_DelimitersPattern')
+    let g:PatternComplete_DelimitersPattern = '[/?#@]'
+endif
+
+
+
 "- mappings --------------------------------------------------------------------
 
 inoremap <script> <expr> <Plug>(PatternCompleteInput)     PatternComplete#InputExpr(0)
@@ -56,6 +69,21 @@ if ! hasmapto('<Plug>(PatternCompleteSearch)', 'i')
 endif
 if ! hasmapto('<Plug>(PatternCompleteLast)', 'i')
     imap <C-x>? <Plug>(PatternCompleteLast)
+endif
+
+
+nnoremap <script> <expr> <SID>(PatternCompleteInput)     PatternComplete#Selected(0)
+nnoremap <script> <expr> <SID>(PatternCompleteWordInput) PatternComplete#Selected(1)
+" Note: Must leave selection first; cannot do that inside the expression mapping
+" because the visual selection marks haven't been set there yet.
+vnoremap <silent> <script> <Plug>(PatternCompleteInput) <C-\><C-n><SID>(PatternCompleteInput)
+vnoremap <silent> <script> <Plug>(PatternCompleteWordInput) <C-\><C-n><SID>(PatternCompleteWordInput)
+
+if ! hasmapto('<Plug>(PatternCompleteInput)', 'v')
+    vmap <C-x>/ <Plug>(PatternCompleteInput)
+endif
+if ! hasmapto('<Plug>(PatternCompleteWordInput)', 'v')
+    vmap <C-x>* <Plug>(PatternCompleteWordInput)
 endif
 
 

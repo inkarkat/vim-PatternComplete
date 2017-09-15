@@ -30,18 +30,19 @@ SEE ALSO								     *
 ==============================================================================
 USAGE						       *PatternComplete-usage*
 								  *i_CTRL-X_/*
-CTRL-X /		The completion uses the /{pattern}/ base before the
-			cursor, or (if no such base) first queries for
-			{pattern} (press <Enter> to conclude), then finds
-			matches for {pattern}.			  *v_CTRL-X_/*
+CTRL-X /		Use a "/"-delimited (|g:PatternComplete_DelimitersPattern|)
+			/{pattern}/ base before the cursor, or (if no such
+			base) first queries for {pattern} (press <Enter> to
+			conclude), and find matches for {pattern}.*v_CTRL-X_/*
 {Visual}CTRL-X /	The completion finds matches for the selected pattern.
 							       *i_CTRL-X_star*
-CTRL-X *		The completion first queries for {pattern} (press
-			<Enter> to conclude), then finds matches for
-			\<{pattern}\>, or {pattern} surrounded by whitespace
-			as a fallback.			       *v_CTRL-X_star*
-{Visual}CTRL-X *	The completion find whole word (or whole WORD as a
-			fallback) matches for the selected pattern.
+CTRL-X *		Use a "/"-delimited /{pattern}/ base before the
+			cursor, or first queries for {pattern} (press <Enter>
+			to conclude), and find matches for \<{pattern}\>, or
+			{pattern} surrounded by whitespace as a fallback.
+							       *v_CTRL-X_star*
+{Visual}CTRL-X *	Find whole word (or whole WORD as a fallback) matches
+			for the selected pattern.
 								  *i_CTRL-X_&*
 CTRL-X &		Find matches for the last search pattern, |quote/|.
 								  *c_CTRL-R_&*

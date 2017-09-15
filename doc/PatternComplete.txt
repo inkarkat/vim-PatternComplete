@@ -16,7 +16,6 @@ DESCRIPTION					 *PatternComplete-description*
 
 This plugin offers completions that either use the last search pattern or
 query for a regular expression, and then offer all matches for completion.
-No completion base is used.
 
 Without this plugin, you can just directly insert the contents of the last
 search pattern register via CTRL-R /, but the register can contain \<word\>
@@ -31,14 +30,18 @@ SEE ALSO								     *
 ==============================================================================
 USAGE						       *PatternComplete-usage*
 								  *i_CTRL-X_/*
-CTRL-X /		The completion first queries for {pattern} (press
-			<Enter> to conclude), then finds matches for
-			{pattern}.
+CTRL-X /		The completion uses the /{pattern}/ base before the
+			cursor, or (if no such base) first queries for
+			{pattern} (press <Enter> to conclude), then finds
+			matches for {pattern}.			  *v_CTRL-X_/*
+{Visual}CTRL-X /	The completion finds matches for the selected pattern.
 							       *i_CTRL-X_star*
 CTRL-X *		The completion first queries for {pattern} (press
 			<Enter> to conclude), then finds matches for
 			\<{pattern}\>, or {pattern} surrounded by whitespace
-			as a fallback.
+			as a fallback.			       *v_CTRL-X_star*
+{Visual}CTRL-X *	The completion find whole word (or whole WORD as a
+			fallback) matches for the selected pattern.
 								  *i_CTRL-X_&*
 CTRL-X &		Find matches for the last search pattern, |quote/|.
 								  *c_CTRL-R_&*
@@ -80,12 +83,19 @@ only for particular buffers; see |CompleteHelper_complete| for supported
 values. >
     let g:PatternComplete_complete = '.,w,b,u'
 <
+			*g:PatternComplete_DelimitersPattern*
+The possible regular expression delimiters for a /{pattern}/ base before the
+cursor (for |i_CTRL-X_/| and |i_CTRL-X_star|) can be configured as a pattern: >
+    let g:PatternComplete_DelimitersPattern = '[/?#@]'
+<
 						       *PatternComplete-remap*
 If you want to use different mappings, map your keys to the
 <Plug>(PatternComplete) mapping targets _before_ sourcing the script (e.g.
 in your |vimrc|): >
     imap <C-x>/ <Plug>(PatternCompleteInput)
     imap <C-x>* <Plug>(PatternCompleteWordInput)
+    vmap <C-x>/ <Plug>(PatternCompleteInput)
+    vmap <C-x>* <Plug>(PatternCompleteWordInput)
     imap <C-x>& <Plug>(PatternCompleteSearch)
     cmap <C-r>& <Plug>(PatternCompleteSearchMatch)
     imap <C-x>? <Plug>(PatternCompleteLast)
@@ -104,6 +114,10 @@ HISTORY						     *PatternComplete-history*
 
 1.10	RELEASEME
 - ENH: Add <C-x>? mapping to reuse last search pattern.
+- ENH: Also support visual mode variants for <C-x>/ and <C-x>*.
+- ENH: Also handle /{pattern}/ base before cursor; this is often quicker and
+  more comfortable to enter (using register contents, other completions, etc.)
+  than the explicit user query that has been the only possibility so far.
 
 1.02	28-Apr-2016
 - Use a:options.abbreviate instead of explicit abbreviation loop. *** You need
@@ -125,7 +139,7 @@ First published version.
 Started development.
 
 ==============================================================================
-Copyright: (C) 2011-2016 Ingo Karkat
+Copyright: (C) 2011-2017 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>

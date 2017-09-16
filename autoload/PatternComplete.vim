@@ -67,9 +67,9 @@ function! PatternComplete#PatternComplete( findstart, base )
 	return s:FindBase()
     else
 	try
-	    let l:base = s:GetSelectedBase(a:base)
+	    let s:pattern = s:GetSelectedBase(a:base)
 	    let l:matches = []
-	    call CompleteHelper#FindMatches(l:matches, l:base, {'complete': PatternComplete#GetCompleteOption(), 'abbreviate': 1})
+	    call CompleteHelper#FindMatches(l:matches, s:pattern, {'complete': PatternComplete#GetCompleteOption(), 'abbreviate': 1})
 	    return l:matches
 	catch /^Vim\%((\a\+)\)\=:/
 	    call s:ErrorMsg(v:exception)
@@ -83,10 +83,12 @@ function! PatternComplete#WordPatternComplete( findstart, base )
     else
 	try
 	    let l:base = s:GetSelectedBase(a:base)
+	    let s:pattern = '\<\%(' . l:base . '\m\)\>'
 	    let l:matches = []
-	    call CompleteHelper#FindMatches(l:matches, '\<\%(' . l:base . '\m\)\>', {'complete': PatternComplete#GetCompleteOption(), 'abbreviate': 1})
+	    call CompleteHelper#FindMatches(l:matches, s:pattern, {'complete': PatternComplete#GetCompleteOption(), 'abbreviate': 1})
 	    if empty(l:matches)
-		call CompleteHelper#FindMatches(l:matches, '\%(^\|\s\)\zs\%(' . l:base . '\m\)\ze\%($\|\s\)', {'complete': PatternComplete#GetCompleteOption()})
+		let s:pattern = '\%(^\|\s\)\zs\%(' . l:base . '\m\)\ze\%($\|\s\)'
+		call CompleteHelper#FindMatches(l:matches, s:pattern, {'complete': PatternComplete#GetCompleteOption()})
 	    endif
 	    return l:matches
 	catch /^Vim\%((\a\+)\)\=:/

@@ -5,19 +5,10 @@
 "   - ingo/msg.vim autoload script
 "   - ingo/text.vim autoload script
 "
-" Copyright: (C) 2011-2014 Ingo Karkat
+" Copyright: (C) 2011-2017 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
-"
-" REVISION	DATE		REMARKS
-"   1.02.004	18-Dec-2013	Use ingo#text#Get() instead of
-"				CompleteHelper#ExtractText().
-"   1.02.003	14-Jun-2013	Use ingo/msg.vim.
-"   1.00.002	06-Feb-2013	DWIM: Remove the \<...\> enclosure when the last
-"				used search pattern is a whole word search (that
-"				just has no matches now).
-"	001	06-Feb-2013	file creation from PatternComplete.vim.
 
 function! s:DefaultSearchResult()
     if @/ =~# '^\\<\k\+\\>$'

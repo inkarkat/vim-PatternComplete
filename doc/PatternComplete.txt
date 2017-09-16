@@ -32,12 +32,12 @@ USAGE						       *PatternComplete-usage*
 								  *i_CTRL-X_/*
 CTRL-X /		Use a "/"-delimited (|g:PatternComplete_DelimitersPattern|)
 			/{pattern}/ base before the cursor, or (if no such
-			base) first queries for {pattern} (press <Enter> to
-			conclude), and find matches for {pattern}.*v_CTRL-X_/*
+			base) first query for {pattern} (press <Enter> to
+			conclude), and find matches for {pattern}. *v_CTRL-X_/*
 {Visual}CTRL-X /	The completion finds matches for the selected pattern.
 							       *i_CTRL-X_star*
 CTRL-X *		Use a "/"-delimited /{pattern}/ base before the
-			cursor, or first queries for {pattern} (press <Enter>
+			cursor, or first query for {pattern} (press <Enter>
 			to conclude), and find matches for \<{pattern}\>, or
 			{pattern} surrounded by whitespace as a fallback.
 							       *v_CTRL-X_star*
@@ -56,10 +56,16 @@ CTRL-X ?		Find matches, reusing the {pattern} from the last
 ==============================================================================
 INSTALLATION					*PatternComplete-installation*
 
-This script is packaged as a |vimball|. If you have the "gunzip" decompressor
-in your PATH, simply edit the *.vmb.gz package in Vim; otherwise, decompress
-the archive first, e.g. using WinZip. Inside Vim, install by sourcing the
-vimball or via the |:UseVimball| command. >
+The code is hosted in a Git repo at
+    https://github.com/inkarkat/vim-PatternComplete
+You can use your favorite plugin manager, or "git clone" into a directory used
+for Vim |packages|. Releases are on the "stable" branch, the latest unstable
+development snapshot on "master".
+
+This script is also packaged as a |vimball|. If you have the "gunzip"
+decompressor in your PATH, simply edit the *.vmb.gz package in Vim; otherwise,
+decompress the archive first, e.g. using WinZip. Inside Vim, install by
+sourcing the vimball or via the |:UseVimball| command. >
     vim PatternComplete*.vmb.gz
     :so %
 To uninstall, use the |:RmVimball| command.
@@ -110,10 +116,16 @@ TODO							*PatternComplete-todo*
 
 IDEAS						       *PatternComplete-ideas*
 
+CONTRIBUTING					  *PatternComplete-contribute*
+
+Report any bugs, send patches, or suggest features via the issue tracker at
+https://github.com/inkarkat/vim-PatternComplete/issues or email (address
+below).
+
 ==============================================================================
 HISTORY						     *PatternComplete-history*
 
-1.10	RELEASEME
+1.10	16-Sep-2017
 - ENH: Add <C-x>? mapping to reuse last search pattern.
 - ENH: Also support visual mode variants for <C-x>/ and <C-x>*.
 - ENH: Also handle /{pattern}/ base before cursor; this is often quicker and

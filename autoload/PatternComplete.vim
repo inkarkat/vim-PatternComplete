@@ -149,6 +149,9 @@ function! PatternComplete#SearchExpr()
     endif
 
     let s:pattern = @/
+    let s:selectedBaseCol = 0
+    let s:selected = 's:pattern'
+
     set completefunc=PatternComplete#PatternComplete
     let s:completefunc = &completefunc
     return "\<C-x>\<C-u>"
@@ -158,6 +161,9 @@ function! PatternComplete#LastExpr()
 	call ingo#msg#ErrorMsg('E35: No previous regular expression')
 	return "$\<BS>"
     endif
+
+    let s:selectedBaseCol = 0
+    let s:selected = 's:pattern'
 
     let &completefunc = s:completefunc
     return "\<C-x>\<C-u>"

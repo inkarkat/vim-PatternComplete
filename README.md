@@ -109,7 +109,7 @@ below).
 HISTORY
 ------------------------------------------------------------------------------
 
-##### 1.10    RELEASEME
+##### 1.10    16-Sep-2017
 - ENH: Add <C-x>? mapping to reuse last search pattern.
 - ENH: Also support visual mode variants for <C-x>/ and <C-x>\*.
 - ENH: Also handle /{pattern}/ base before cursor; this is often quicker and

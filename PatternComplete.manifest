@@ -1,4 +1,5 @@
 autoload/PatternComplete.vim
+autoload/PatternComplete/AsBrace.vim
 autoload/PatternComplete/NextSearchMatch.vim
 plugin/PatternComplete.vim
 doc/PatternComplete.txt

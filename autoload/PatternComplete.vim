@@ -28,6 +28,9 @@ endfunction
 function! s:GetSelectedBase( base )
     execute 'return' s:selected
 endfunction
+function! s:Convert( matches )
+    return (empty(s:Converter) ? a:matches : call(s:Converter, [a:matches]))
+endfunction
 function! PatternComplete#PatternComplete( findstart, base )
     if a:findstart
 	return s:FindBase()
@@ -36,7 +39,7 @@ function! PatternComplete#PatternComplete( findstart, base )
 	    let s:pattern = s:GetSelectedBase(a:base)
 	    let l:matches = []
 	    call CompleteHelper#FindMatches(l:matches, s:pattern, {'complete': PatternComplete#GetCompleteOption(), 'abbreviate': 1})
-	    return l:matches
+	    return s:Convert(l:matches)
 	catch /^Vim\%((\a\+)\)\=:/
 	    call s:ErrorMsg(v:exception)
 	    return []
@@ -56,7 +59,7 @@ function! PatternComplete#WordPatternComplete( findstart, base )
 		let s:pattern = '\%(^\|\s\)\zs\%(' . l:base . '\m\)\ze\%($\|\s\)'
 		call CompleteHelper#FindMatches(l:matches, s:pattern, {'complete': PatternComplete#GetCompleteOption()})
 	    endif
-	    return l:matches
+	    return s:Convert(l:matches)
 	catch /^Vim\%((\a\+)\)\=:/
 	    call s:ErrorMsg(v:exception)
 	    return []
@@ -69,7 +72,9 @@ function! s:PatternInput( isWordInput )
     let s:pattern = input('Pattern to find ' . (a:isWordInput ? 'word-' : '') . 'completions: ')
     call inputrestore()
 endfunction
-function! s:Expr( isWordInput )
+function! s:Expr( isWordInput, ... )
+    let s:Converter = (a:0 ? a:1 : '')
+
     if a:isWordInput
 	set completefunc=PatternComplete#WordPatternComplete
     else
@@ -83,7 +88,7 @@ function! s:CapturePatternBeforeCursor()
     let s:selectedBaseCol = searchpos('\(' . l:delimitersPattern . '\)\%(\%(\%(^\|[^\\]\)\%(\\\\\)*\\\)\@<!\\\1\|\%(\1\@!.\)\)*\1\%#', 'bn', line('.'))[1]
     return (s:selectedBaseCol > 0)
 endfunction
-function! PatternComplete#InputExpr( isWordInput )
+function! PatternComplete#InputExpr( isWordInput, ... )
     if s:CapturePatternBeforeCursor()
 	let s:selected = 'a:base[1:-2]'
     else
@@ -100,17 +105,17 @@ function! PatternComplete#InputExpr( isWordInput )
 	endif
     endif
 
-    return s:Expr(a:isWordInput)
+    return call('s:Expr', [a:isWordInput] + a:000)
 endfunction
-function! PatternComplete#Selected( isWordInput )
-    call s:Expr(a:isWordInput)
+function! PatternComplete#Selected( isWordInput, ... )
+    return call('s:Expr', [a:isWordInput] + a:000)
     let s:selectedBaseCol = col("'<")
     let s:selected = 'a:base'
 
     return "g`>" . (col("'>") == (col('$')) ? 'a' : 'i') . "\<C-x>\<C-u>"
 endfunction
 
-function! PatternComplete#SearchExpr()
+function! PatternComplete#SearchExpr( ... )
     if empty(@/)
 	call ingo#msg#ErrorMsg('E35: No previous regular expression')
 	return "$\<BS>"
@@ -120,9 +125,9 @@ function! PatternComplete#SearchExpr()
     let s:selectedBaseCol = 0
     let s:selected = 's:pattern'
 
-    return s:Expr(0)
+    return call('s:Expr', [0] + a:000)
 endfunction
-function! PatternComplete#LastExpr()
+function! PatternComplete#LastExpr( ... )
     if empty(s:pattern)
 	call ingo#msg#ErrorMsg('E35: No previous regular expression')
 	return "$\<BS>"
@@ -131,8 +136,7 @@ function! PatternComplete#LastExpr()
     let s:selectedBaseCol = 0
     let s:selected = 's:pattern'
 
-    let &completefunc = s:completefunc
-    return "\<C-x>\<C-u>"
+    return call('s:Expr', [(s:completefunc ==# 'PatternComplete#WordPatternComplete')] + a:000)
 endfunction
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :

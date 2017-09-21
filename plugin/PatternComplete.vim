@@ -3,6 +3,8 @@
 " DEPENDENCIES:
 "   - Requires Vim 7.0 or higher.
 "   - PatternComplete.vim autoload script
+"   - PatternComplete/AsBrace.vim autoload script
+"   - PatternComplete/NextSearchMatch.vim autoload script
 "
 " Copyright: (C) 2011-2017 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
@@ -19,6 +21,12 @@ let g:loaded_PatternComplete = 1
 
 if ! exists('g:PatternComplete_DelimitersPattern')
     let g:PatternComplete_DelimitersPattern = '[/?#@]'
+endif
+if ! exists('g:PatternComplete_EnableBraceMappings')
+    let g:PatternComplete_EnableBraceMappings = 1
+endif
+if ! exists('g:PatternComplete_AsBraceOptions')
+    let g:PatternComplete_AsBraceOptions = {'short': 1}
 endif
 
 
@@ -55,6 +63,40 @@ if ! hasmapto('<Plug>(PatternCompleteInput)', 'v')
 endif
 if ! hasmapto('<Plug>(PatternCompleteWordInput)', 'v')
     vmap <C-x>* <Plug>(PatternCompleteWordInput)
+endif
+
+if g:PatternComplete_EnableBraceMappings
+inoremap <script> <expr> <Plug>(PatternCompleteInputAsBrace)     PatternComplete#InputExpr(0, 'PatternComplete#AsBrace#Converter')
+inoremap <script> <expr> <Plug>(PatternCompleteWordInputAsBrace) PatternComplete#InputExpr(1, 'PatternComplete#AsBrace#Converter')
+inoremap <script> <expr> <Plug>(PatternCompleteSearchAsBrace)    PatternComplete#SearchExpr('PatternComplete#AsBrace#Converter')
+inoremap <script> <expr> <Plug>(PatternCompleteLastAsBrace)      PatternComplete#LastExpr('PatternComplete#AsBrace#Converter')
+if ! hasmapto('<Plug>(PatternCompleteInputAsBrace)', 'i')
+    imap <C-x>g/ <Plug>(PatternCompleteInputAsBrace)
+endif
+if ! hasmapto('<Plug>(PatternCompleteWordInputAsBrace)', 'i')
+    imap <C-x>g* <Plug>(PatternCompleteWordInputAsBrace)
+endif
+if ! hasmapto('<Plug>(PatternCompleteSearchAsBrace)', 'i')
+    imap <C-x>g& <Plug>(PatternCompleteSearchAsBrace)
+endif
+if ! hasmapto('<Plug>(PatternCompleteLastAsBrace)', 'i')
+    imap <C-x>g? <Plug>(PatternCompleteLastAsBrace)
+endif
+
+
+nnoremap <script> <expr> <SID>(PatternCompleteInputAsBrace)     PatternComplete#Selected(0, 'PatternComplete#AsBrace#Converter')
+nnoremap <script> <expr> <SID>(PatternCompleteWordInputAsBrace) PatternComplete#Selected(1, 'PatternComplete#AsBrace#Converter')
+" Note: Must leave selection first; cannot do that inside the expression mapping
+" because the visual selection marks haven't been set there yet.
+vnoremap <silent> <script> <Plug>(PatternCompleteInputAsBrace) <C-\><C-n><SID>(PatternCompleteInputAsBrace)
+vnoremap <silent> <script> <Plug>(PatternCompleteWordInputAsBrace) <C-\><C-n><SID>(PatternCompleteWordInputAsBrace)
+
+if ! hasmapto('<Plug>(PatternCompleteInputAsBrace)', 'v')
+    vmap <C-x>g/ <Plug>(PatternCompleteInputAsBrace)
+endif
+if ! hasmapto('<Plug>(PatternCompleteWordInput)', 'v')
+    vmap <C-x>g* <Plug>(PatternCompleteWordInput)
+endif
 endif
 
 

@@ -52,6 +52,14 @@ CTRL-R &		Insert first match for the last search pattern
 								  *i_CTRL-X_?*
 CTRL-X ?		Find matches, reusing the {pattern} from the last
 			pattern completion.
+	       *i_CTRL-X_g/* *v_CTRL-X_g/* *i_CTRL-X_g_star* *v_CTRL-X_g_star*
+						   *i_CTRL-X_g&* *i_CTRL-X_g?*
+CTRL-X g/		Like above, but instead of offering matches as
+{Visual}CTRL-X g/	completion candidates, find common substrings and turn
+CTRL-X g*		all matches into a Bash-like Brace Expression.
+{Visual}CTRL-X g*	For example, /\<f\w\+\>/ yields foobar, fooxy and foon.
+CTRL-X g&		Those will be inserted as foo{bar,xy,n}.
+CTRL-X g?
 
 ==============================================================================
 INSTALLATION					*PatternComplete-installation*
@@ -90,10 +98,19 @@ only for particular buffers; see |CompleteHelper_complete| for supported
 values. >
     let g:PatternComplete_complete = '.,w,b,u'
 <
-			*g:PatternComplete_DelimitersPattern*
+					 *g:PatternComplete_DelimitersPattern*
 The possible regular expression delimiters for a /{pattern}/ base before the
 cursor (for |i_CTRL-X_/| and |i_CTRL-X_star|) can be configured as a pattern: >
     let g:PatternComplete_DelimitersPattern = '[/?#@]'
+<
+	 *g:PatternComplete_AsBraceOptions* *b:PatternComplete_AsBraceOptions*
+The Brace Expression can be created according to strict rules that allow a
+expansion into the original matches: >
+    let g:PatternComplete_AsBraceOptions = {'strict': 1}
+By default, a different algorithm is chosen that trades full equivalence
+(between expression and substrings) for a shorter syntax that is better to
+understand: >
+    let g:PatternComplete_AsBraceOptions = {'short': 1}
 <
 						       *PatternComplete-remap*
 If you want to use different mappings, map your keys to the
@@ -106,6 +123,17 @@ in your |vimrc|): >
     imap <C-x>& <Plug>(PatternCompleteSearch)
     cmap <C-r>& <Plug>(PatternCompleteSearchMatch)
     imap <C-x>? <Plug>(PatternCompleteLast)
+<				       *g:PatternComplete_EnableBraceMappings*
+If you don't want the mappings that return all matches as a single Bash-like
+Brace Expression, you can disable them all at once via: >
+    let g:PatternComplete_EnableBraceMappings = 0
+Alternatively, you can tweak or disable them all individually, too: >
+    imap <C-x>g/ <Plug>(PatternCompleteInputAsBrace)
+    imap <C-x>g* <Plug>(PatternCompleteWordInputAsBrace)
+    vmap <C-x>g/ <Plug>(PatternCompleteInputAsBrace)
+    vmap <C-x>g* <Plug>(PatternCompleteWordInputAsBrace)
+    imap <C-x>g& <Plug>(PatternCompleteSearchAsBrace)
+    imap <C-x>g? <Plug>(PatternCompleteLastAsBrace)
 <
 ==============================================================================
 LIMITATIONS					 *PatternComplete-limitations*
@@ -124,6 +152,10 @@ below).
 
 ==============================================================================
 HISTORY						     *PatternComplete-history*
+
+1.20	RELEASEME
+- ENH: Add <C-x> g ... mappings to insert all pattern matches joined into a
+  Bash-like Brace Expression.
 
 1.10	16-Sep-2017
 - ENH: Add <C-x>? mapping to reuse last search pattern.

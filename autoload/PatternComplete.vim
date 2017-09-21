@@ -120,9 +120,7 @@ function! PatternComplete#SearchExpr()
     let s:selectedBaseCol = 0
     let s:selected = 's:pattern'
 
-    set completefunc=PatternComplete#PatternComplete
-    let s:completefunc = &completefunc
-    return "\<C-x>\<C-u>"
+    return s:Expr(0)
 endfunction
 function! PatternComplete#LastExpr()
     if empty(s:pattern)

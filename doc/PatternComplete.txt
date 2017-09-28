@@ -26,6 +26,8 @@ SEE ALSO								     *
 
 - Check out the |CompleteHelper.vim| plugin page (vimscript #3914) for a full
   list of insert mode completions powered by it.
+- |InsertAllCompletions.vim| (vimscript #0000) can insert all matches from any
+  (built-in or custom) completion as a Brace Expression (or joined list).
 
 ==============================================================================
 USAGE						       *PatternComplete-usage*

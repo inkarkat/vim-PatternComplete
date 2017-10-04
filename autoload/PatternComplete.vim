@@ -108,7 +108,7 @@ function! PatternComplete#InputExpr( isWordInput, ... )
     return call('s:Expr', [a:isWordInput] + a:000)
 endfunction
 function! PatternComplete#Selected( isWordInput, ... )
-    return call('s:Expr', [a:isWordInput] + a:000)
+    call call('s:Expr', [a:isWordInput] + a:000)
     let s:selectedBaseCol = col("'<")
     let s:selected = 'a:base'
 

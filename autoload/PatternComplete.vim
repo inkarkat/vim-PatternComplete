@@ -4,6 +4,8 @@
 "   - CompleteHelper.vim autoload script
 "   - ingo/msg.vim autoload script
 "   - ingo/plugin/setting.vim autoload script
+"   - ingo/str/find.vim autoload script
+"   - ingo/text.vim autoload script
 "
 " Copyright: (C) 2011-2017 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
@@ -67,9 +69,9 @@ function! PatternComplete#WordPatternComplete( findstart, base )
     endif
 endfunction
 
-function! s:PatternInput( isWordInput )
+function! s:PatternInput( isWordInput, preset )
     call inputsave()
-    let s:pattern = input('Pattern to find ' . (a:isWordInput ? 'word-' : '') . 'completions: ')
+    let s:pattern = input('Pattern to find ' . (a:isWordInput ? 'word-' : '') . 'completions: ', a:preset)
     call inputrestore()
 endfunction
 function! s:Expr( isWordInput, ... )
@@ -81,28 +83,55 @@ function! s:Expr( isWordInput, ... )
 	set completefunc=PatternComplete#PatternComplete
     endif
     let s:completefunc = &completefunc
+
+    if s:selected ==# 's:pattern' && empty(s:pattern)
+	" Note: When nothing is returned, the command-line isn't cleared
+	" correctly, so it isn't clear that we're back in insert mode. Avoid
+	" this by making a no-op insert.
+	"return ''
+	return "$\<BS>"
+    endif
+
     return "\<C-x>\<C-u>"
 endfunction
-function! s:CapturePatternBeforeCursor()
+function! s:CapturePatternBeforeCursor( isWordInput )
+    let s:selectedBaseCol = 0
+
+    " Try delimited regexp before cursor first (if delimiters are defined).
     let l:delimitersPattern = ingo#plugin#setting#GetBufferLocal('PatternComplete_DelimitersPattern')
-    let s:selectedBaseCol = searchpos('\(' . l:delimitersPattern . '\)\%(\%(\%(^\|[^\\]\)\%(\\\\\)*\\\)\@<!\\\1\|\%(\1\@!.\)\)*\1\%#', 'bn', line('.'))[1]
-    return (s:selectedBaseCol > 0)
+    if ! empty(l:delimitersPattern)
+	let s:selectedBaseCol = searchpos('\(' . l:delimitersPattern . '\)\%(\%(\%(^\|[^\\]\)\%(\\\\\)*\\\)\@<!\\\1\|\%(\1\@!.\)\)*\1\%#', 'bn', line('.'))[1]
+    endif
+
+    if s:selectedBaseCol > 0
+	let s:selected = 'a:base[1:-2]'
+	return 1
+    endif
+
+    " Fallback to WORD before cursor, use as preset for pattern input.
+    let s:selectedBaseCol = searchpos('\S\+\%#', 'bn', line('.'))[1]
+    if s:selectedBaseCol > 0
+	let l:base = ingo#text#Get([line('.'), s:selectedBaseCol], getpos('.')[1:2], 1)
+	let s:selected = 's:pattern'
+	call s:PatternInput(a:isWordInput, l:base)
+
+	let l:baseIndex = ingo#str#find#StartIndex(l:base, s:pattern)
+	" -1: The user did not accept the WORD before cursor preset; do not
+	"     remove the base occupied by it.
+	"  0: The user accepted WORD and just appended to it.
+	" >0: The user partially accepted WORD, but removed parts at the
+	"     beginning. Shift the start of the base accordingly.
+	let s:selectedBaseCol = (l:baseIndex == -1 ? 0 : s:selectedBaseCol + l:baseIndex)
+
+	return 1
+    endif
+    return 0
 endfunction
 function! PatternComplete#InputExpr( isWordInput, ... )
-    if s:CapturePatternBeforeCursor()
-	let s:selected = 'a:base[1:-2]'
-    else
+    if ! s:CapturePatternBeforeCursor(a:isWordInput)
 	let s:selectedBaseCol = 0
 	let s:selected = 's:pattern'
-	call s:PatternInput(a:isWordInput)
-
-	if empty(s:pattern)
-	    " Note: When nothing is returned, the command-line isn't cleared
-	    " correctly, so it isn't clear that we're back in insert mode. Avoid
-	    " this by making a no-op insert.
-	    "return ''
-	    return "$\<BS>"
-	endif
+	call s:PatternInput(a:isWordInput, '')
     endif
 
     return call('s:Expr', [a:isWordInput] + a:000)

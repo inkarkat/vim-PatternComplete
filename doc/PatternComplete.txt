@@ -34,14 +34,16 @@ USAGE						       *PatternComplete-usage*
 								  *i_CTRL-X_/*
 CTRL-X /		Use a "/"-delimited (|g:PatternComplete_DelimitersPattern|)
 			/{pattern}/ base before the cursor, or (if no such
-			base) first query for {pattern} (press <Enter> to
-			conclude), and find matches for {pattern}. *v_CTRL-X_/*
+			base) the WORD before the cursor and allow further
+			refinement (press <Enter> to accept, <C-U> to discard
+			and enter something else, or just edit the preset), or
+			(if only whitespace before cursor) first query for
+			{pattern} (press <Enter> to conclude), and find
+			matches for {pattern}.			  *v_CTRL-X_/*
 {Visual}CTRL-X /	The completion finds matches for the selected pattern.
 							       *i_CTRL-X_star*
-CTRL-X *		Use a "/"-delimited /{pattern}/ base before the
-			cursor, or first query for {pattern} (press <Enter>
-			to conclude), and find matches for \<{pattern}\>, or
-			{pattern} surrounded by whitespace as a fallback.
+CTRL-X *		Like above, but find matches for whole \<{pattern}\>,
+			or {pattern} surrounded by whitespace as a fallback.
 							       *v_CTRL-X_star*
 {Visual}CTRL-X *	Find whole word (or whole WORD as a fallback) matches
 			for the selected pattern.
@@ -83,7 +85,7 @@ To uninstall, use the |:RmVimball| command.
 DEPENDENCIES					*PatternComplete-dependencies*
 
 - Requires Vim 7.0 or higher.
-- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.011 or
+- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.033 or
   higher.
 - Requires the |CompleteHelper.vim| plugin (vimscript #3914), version 1.50 or
   higher.
@@ -104,7 +106,7 @@ values. >
 The possible regular expression delimiters for a /{pattern}/ base before the
 cursor (for |i_CTRL-X_/| and |i_CTRL-X_star|) can be configured as a pattern: >
     let g:PatternComplete_DelimitersPattern = '[/?#@]'
-<
+Set to an empty string to disable the special parsing of delimited {patterns}.
 	 *g:PatternComplete_AsBraceOptions* *b:PatternComplete_AsBraceOptions*
 The Brace Expression can be created according to strict rules that allow a
 expansion into the original matches: >
@@ -158,6 +160,12 @@ HISTORY						     *PatternComplete-history*
 1.20	RELEASEME
 - ENH: Add <C-x> g ... mappings to insert all pattern matches joined into a
   Bash-like Brace Expression.
+- CHG: <C-x>/ and <C-x>* insert mode mappings now grab the WORD before the
+  cursor as a preset for editing (unless a separated /{pattern}/ is found).
+  Using other completions to build the pattern is a common use case, the
+  delimiters are often forgotten, selection is cumbersome and slow, and often
+  there's a natural whitespace boundary, anyway.
+  *** You need to update to ingo-library (vimscript #4433) version 1.033! ***
 
 1.10	16-Sep-2017
 - ENH: Add <C-x>? mapping to reuse last search pattern.

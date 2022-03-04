@@ -7,7 +7,7 @@
 "   - ingo/str/find.vim autoload script
 "   - ingo/text.vim autoload script
 "
-" Copyright: (C) 2011-2017 Ingo Karkat
+" Copyright: (C) 2011-2022 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -141,7 +141,7 @@ function! PatternComplete#Selected( isWordInput, ... )
     let s:selectedBaseCol = col("'<")
     let s:selected = 'a:base'
 
-    return "g`>" . (col("'>") == (col('$')) ? 'a' : 'i') . "\<C-x>\<C-u>"
+    return 'g`>' . (col("'>") == (col('$')) ? 'a' : 'i') . "\<C-x>\<C-u>"
 endfunction
 
 function! PatternComplete#SearchExpr( ... )

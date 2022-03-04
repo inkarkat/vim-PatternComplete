@@ -144,28 +144,28 @@ function! PatternComplete#Selected( isWordInput, ... )
     return 'g`>' . (col("'>") == (col('$')) ? 'a' : 'i') . "\<C-x>\<C-u>"
 endfunction
 
-function! PatternComplete#SearchExpr( ... )
-    if empty(@/)
+function! PatternComplete#PatternExpr( pattern, isWordInput, isReuseAsLast, ...)
+    if empty(a:pattern)
 	call ingo#msg#ErrorMsg('E35: No previous regular expression')
 	return "$\<BS>"
     endif
 
-    let s:pattern = @/
     let s:selectedBaseCol = 0
-    let s:selected = 's:pattern'
+    if a:isReuseAsLast
+	let s:pattern = a:pattern
+	let s:selected = 's:pattern'
+    else
+	let s:selected = string(a:pattern)
+    endif
 
-    return call('s:Expr', [0] + a:000)
+    return call('s:Expr', [a:isWordInput] + a:000)
+endfunction
+
+function! PatternComplete#SearchExpr( ... )
+    return call('PatternComplete#PatternExpr', [@/, 0, 1] + a:000)
 endfunction
 function! PatternComplete#LastExpr( ... )
-    if empty(s:pattern)
-	call ingo#msg#ErrorMsg('E35: No previous regular expression')
-	return "$\<BS>"
-    endif
-
-    let s:selectedBaseCol = 0
-    let s:selected = 's:pattern'
-
-    return call('s:Expr', [(s:completefunc ==# 'PatternComplete#WordPatternComplete')] + a:000)
+    return call('PatternComplete#PatternExpr', [s:pattern, (s:completefunc ==# 'PatternComplete#WordPatternComplete'), 1] + a:000)
 endfunction
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :

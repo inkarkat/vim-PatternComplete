@@ -6,7 +6,7 @@
 "   - PatternComplete/AsBrace.vim autoload script
 "   - PatternComplete/NextSearchMatch.vim autoload script
 "
-" Copyright: (C) 2011-2017 Ingo Karkat
+" Copyright: (C) 2011-2022 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -100,7 +100,7 @@ endif
 endif
 
 
-cnoremap <expr> <Plug>(PatternCompleteSearchMatch) PatternComplete#NextSearchMatch#InsertInCmdline()
+cnoremap <expr> <Plug>(PatternCompleteSearchMatch) PatternComplete#NextSearchMatch#InsertInCmdline(@/)
 if ! hasmapto('<Plug>(PatternCompleteSearchMatch)', 'c')
     cmap <C-r>& <Plug>(PatternCompleteSearchMatch)
 endif

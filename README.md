@@ -1,4 +1,4 @@
-PATTERN COMPLETE   
+PATTERN COMPLETE
 ===============================================================================
 _by Ingo Karkat_
 
@@ -9,9 +9,9 @@ This plugin offers completions that either use the last search pattern or
 query for a regular expression, and then offer all matches for completion.
 
 Without this plugin, you can just directly insert the contents of the last
-search pattern register via CTRL-R /, but the register can contain \<word\>
+search pattern register via CTRL-R /, but the register can contain \\&lt;word\\&gt;
 boundary characters from a star search or other non-literal regexp atoms
-like \V, .\*, etc., which you usually don't want inserted into the text.
+like \\V, .\*, etc., which you usually don't want inserted into the text.
 
 ### SEE ALSO
 
@@ -110,7 +110,7 @@ understand:
     let g:PatternComplete_AsBraceOptions = {'short': 1}
 
 If you want to use different mappings, map your keys to the
- Plug>(PatternComplete) mapping targets _before_ sourcing the script (e.g.
+&lt;Plug&gt;(PatternComplete) mapping targets _before_ sourcing the script (e.g.
 in your vimrc):
 
     imap <C-x>/ <Plug>(PatternCompleteInput)
@@ -145,33 +145,38 @@ below).
 HISTORY
 ------------------------------------------------------------------------------
 
-##### 1.20    RELEASEME
-- ENH: Add <C-x> g ... mappings to insert all pattern matches joined into a
+##### 1.20    12-Nov-2024
+- ENH: Add &lt;C-x&gt; g ... mappings to insert all pattern matches joined into a
   Bash-like Brace Expression.
-- CHG: <C-x>/ and <C-x>\* insert mode mappings now grab the WORD before the
+- CHG: &lt;C-x&gt;/ and &lt;C-x&gt;\* insert mode mappings now grab the WORD before the
   cursor as a preset for editing (unless a separated /{pattern}/ is found).
   Using other completions to build the pattern is a common use case, the
   delimiters are often forgotten, selection is cumbersome and slow, and often
   there's a natural whitespace boundary, anyway.
-  __You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.033!__
+
+__You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.033!__
 
 ##### 1.10    16-Sep-2017
-- ENH: Add <C-x>? mapping to reuse last search pattern.
-- ENH: Also support visual mode variants for <C-x>/ and <C-x>\*.
+- ENH: Add &lt;C-x&gt;? mapping to reuse last search pattern.
+- ENH: Also support visual mode variants for &lt;C-x&gt;/ and &lt;C-x&gt;\*.
 - ENH: Also handle /{pattern}/ base before cursor; this is often quicker and
   more comfortable to enter (using register contents, other completions, etc.)
   than the explicit user query that has been the only possibility so far.
 
 ##### 1.02    28-Apr-2016
-- Use a:options.abbreviate instead of explicit abbreviation loop. __You need
+- Use a:options.abbreviate instead of explicit abbreviation loop.
+
+__You need
   to update to CompleteHelper.vim ([vimscript #3914](http://www.vim.org/scripts/script.php?script_id=3914)) version 1.50!__
 - Remove default g:PatternComplete\_complete configuration and default to
   'complete' option value instead.
-- Use more functions from the ingo-library. __You need to update to
+- Use more functions from the ingo-library.
+
+__You need to update to
   ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.011!__
 
 ##### 1.01    15-Jul-2013
-- DWIM: Remove the \<...\> enclosure when the last used search pattern is a
+- DWIM: Remove the \\&lt;...\\&gt; enclosure when the last used search pattern is a
   whole word search (that just has no matches now).
 - Add dependency to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)).
 
@@ -182,7 +187,7 @@ HISTORY
 - Started development.
 
 ------------------------------------------------------------------------------
-Copyright: (C) 2011-2017 Ingo Karkat -
+Copyright: (C) 2011-2024 Ingo Karkat -
 The [VIM LICENSE](http://vimdoc.sourceforge.net/htmldoc/uganda.html#license) applies to this plugin.
 
-Maintainer:     Ingo Karkat <ingo@karkat.de>
+Maintainer:     Ingo Karkat &lt;ingo@karkat.de&gt;
